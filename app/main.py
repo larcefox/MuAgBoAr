@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 from app.api import characters, scenes, books
+from app.api import scene_crewai
 
 logging.basicConfig(level=logging.INFO)
 
@@ -27,3 +28,4 @@ async def health():
 app.include_router(characters.router)
 app.include_router(scenes.router)
 app.include_router(books.router)
+app.include_router(scene_crewai.router, prefix="/scene", tags=["scene_crewai"])

@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     llm_model: str = os.getenv("LLM_MODEL", "mistral")
     llm_temperature: float = float(os.getenv("LLM_TEMPERATURE", "0.7"))
     llm_max_tokens: int = int(os.getenv("LLM_MAX_TOKENS", "512"))
-    mock_llm: bool = os.getenv("MOCK_LLM", "true").lower() == "true"
+    mock_llm: bool = os.getenv("MOCK_LLM", "true").lower() == "false"
 
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./data.db")
     server_host: str = os.getenv("SERVER_HOST", "0.0.0.0")

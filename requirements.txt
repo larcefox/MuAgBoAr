@@ -4,3 +4,5 @@ sqlalchemy
 httpx
 pydantic
 pydantic-settings
+crewai
+requests
