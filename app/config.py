@@ -1,9 +1,11 @@
 import os
 from functools import lru_cache
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env")
+
     app_name: str = "book-multiagent-codex"
     llm_backend: str = os.getenv("LLM_BACKEND", "ollama")
     llm_url: str = os.getenv("LLM_URL", "http://localhost:11434")
@@ -15,9 +17,6 @@ class Settings(BaseSettings):
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./data.db")
     server_host: str = os.getenv("SERVER_HOST", "0.0.0.0")
     server_port: int = int(os.getenv("SERVER_PORT", "8000"))
-
-    class Config:
-        env_file = ".env"
 
 
 @lru_cache()

@@ -44,6 +44,6 @@ async def generate_chapter_endpoint(payload: schemas.ChapterGenerationRequest, d
     if len(characters) != len(payload.active_characters):
         raise HTTPException(status_code=404, detail="One or more characters not found")
     llm_client = get_llm_client()
-    plan_dict = payload.book_plan.dict()
+    plan_dict = payload.book_plan.model_dump()
     chapter_text = await generate_chapter(llm_client, plan_dict, payload.chapter_number, characters)
     return {"chapter_text": chapter_text}
