@@ -22,6 +22,7 @@ class OllamaClient(BaseLLMClient):
         payload: Dict[str, Any] = {
             "model": self.model,
             "prompt": prompt,
+            "stream": False,
             "options": {
                 "temperature": kwargs.get("temperature", self.temperature),
                 "num_predict": kwargs.get("max_tokens", self.max_tokens),

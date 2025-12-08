@@ -35,7 +35,9 @@ uvicorn app.main:app --reload --host ${SERVER_HOST:-0.0.0.0} --port ${SERVER_POR
   }
   ```
 - Список: `GET /characters`
-- Получить/обновить/удалить: `GET|PUT|DELETE /characters/{id}`
+- Получить: `GET /characters/1`
+- Обновить: `PUT /characters/1` с теми полями, которые хотите изменить.
+- Удалить: `DELETE /characters/1`
 
 ### 2) Генерация сцен
 - POV-сцена: `POST /scene/generate_pov`
@@ -57,6 +59,19 @@ uvicorn app.main:app --reload --host ${SERVER_HOST:-0.0.0.0} --port ${SERVER_POR
   }
   ```
   Ответ: полное поле `dialogue_text` и список реплик `turns`.
+- CrewAI POV (русский ответ): `POST /scene/generate_pov_crewai`
+  ```json
+  {
+    "scene_description": "Крыша старого города, неон внизу",
+    "characters": [
+      {"name": "Сорц", "role": "хакер", "traits": "осторожный, язвительный"},
+      {"name": "Лан Кай", "role": "инженер", "traits": "тёплый, болтливый"}
+    ],
+    "words_min": 150,
+    "words_max": 250
+  }
+  ```
+  Ответ: `scene_text` (единый блок; если нужен раздельный POV, разбирайте вывод по агентам).
 
 ### 3) План книги и главы
 - План: `POST /book/plan`
@@ -69,19 +84,23 @@ uvicorn app.main:app --reload --host ${SERVER_HOST:-0.0.0.0} --port ${SERVER_POR
     "main_characters": [1, 2]
   }
   ```
-  Ответ: `synopsis` и массив `chapters` с номером, названием и кратким содержанием.
+  Ответ: `plan_id`, `synopsis`, `chapters` (каждый с `number`, `title`, `summary`).
 - Генерация главы: `POST /book/generate_chapter`
   ```json
   {
     "book_plan": {
-      "synopsis": "...",
-      "chapters": [{ "number": 1, "title": "Биржа песков", "summary": "..." }]
+      "plan_id": 8,
+      "synopsis": "Герои ищут артефакт в альтернативном 1930 году.",
+      "chapters": [
+        { "number": 1, "title": "Старт экспедиции", "summary": "Команда собирается и получает карту." }
+      ]
     },
+    "book_plan_id": 8,
     "chapter_number": 1,
     "active_characters": [1, 2]
   }
   ```
-  Ответ: `chapter_text`.
+  Ответ: `chapter_text`, `chapter_id`. Текст сохраняется в БД (таблица `chapters`) по `book_plan_id`.
 
 ## Подсказки по режимам LLM
 - Быстрый старт: оставьте `MOCK_LLM=true` — ответы будут заглушками, но сервис и схема API проверяются.

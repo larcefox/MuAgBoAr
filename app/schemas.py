@@ -79,15 +79,18 @@ class ChapterInfo(BaseModel):
 
 
 class BookPlanResponse(BaseModel):
+    plan_id: Optional[int] = None
     synopsis: str
     chapters: List[ChapterInfo]
 
 
 class ChapterGenerationRequest(BaseModel):
     book_plan: BookPlanResponse
+    book_plan_id: Optional[int] = None
     chapter_number: int
     active_characters: List[int]
 
 
 class ChapterGenerationResponse(BaseModel):
     chapter_text: str
+    chapter_id: Optional[int] = None
