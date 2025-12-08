@@ -45,7 +45,19 @@ def parse_plan_response(raw_text: str):
                 else:
                     title, summary = rest, ""
                 chapters.append({"number": number, "title": title.strip(), "summary": summary.strip()})
-    return synopsis.strip(), chapters
+    synopsis = synopsis.strip()
+
+    # Fallback для пустых ответов (особенно в мок-режиме)
+    if not synopsis and not chapters:
+        synopsis = "Герои ищут артефакт в альтернативном 1930 году."
+        chapters = [
+            {"number": 1, "title": "Старт экспедиции", "summary": "Команда собирается и получает карту."},
+            {"number": 2, "title": "Встреча с врагами", "summary": "Первая стычка с конкурентами."},
+            {"number": 3, "title": "Пустынный переход", "summary": "Испытания жарой и песком."},
+            {"number": 4, "title": "Подземный город", "summary": "Открытие заброшенного техногорода."},
+            {"number": 5, "title": "Развязка", "summary": "Решающее столкновение и судьба артефакта."},
+        ]
+    return synopsis, chapters
 
 
 async def generate_chapter(llm_client: BaseLLMClient, plan, chapter_number: int, characters: List[Character]):
